@@ -252,6 +252,7 @@ local function summary()
         ooc_enabled = wzOption("OutOfCellPaths") == true,
         ooc_threshold = tonumber(wzOption("OutOfCellThreshold")),
         force_pathfind_mode = tonumber(wzOption("ForcePathfind")),
+        pathfinding_backend = Diagnostics.pathfindingBackend(),
     }
 end
 

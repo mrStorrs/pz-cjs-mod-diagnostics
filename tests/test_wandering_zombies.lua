@@ -18,6 +18,14 @@ getActivatedMods = function()
         end,
     }
 end
+getDebugOptions = function()
+    return {
+        getBoolean = function(_, key)
+            assert(key == "Pathfind.UseNativeCode", "unexpected debug option")
+            return false
+        end,
+    }
+end
 
 local function event(list)
     return {
@@ -77,6 +85,16 @@ dofile(root .. "/CJS_ModDiagnostics.lua")
 assert(#callbacks.gameStart == 1, "expected an OnGameStart hook")
 callbacks.gameStart[1]()
 assert(#callbacks.tick == 2, "missing adapter should install one bounded retry hook")
+
+local startupBackendFound = false
+for i = 1, #logs do
+    if logs[i]:find("event=started", 1, true)
+        and logs[i]:find("pathfinding_backend=java", 1, true)
+    then
+        startupBackendFound = true
+    end
+end
+assert(startupBackendFound, "startup log did not report the Java pathfinding backend")
 
 WZZombieBase = {pathTo = original}
 local pendingTicks = {}
@@ -143,6 +161,7 @@ local heartbeatFound = false
 for i = 1, #logs do
     if logs[i]:find("event=heartbeat", 1, true)
         and logs[i]:find("wrapper_current=true", 1, true)
+        and logs[i]:find("pathfinding_backend=java", 1, true)
     then
         heartbeatFound = true
     end

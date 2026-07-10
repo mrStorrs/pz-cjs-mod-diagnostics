@@ -8,9 +8,10 @@ without changing the wrapped mod's behavior.
 
 - Wandering Zombies WIP path requests
 
-The Wandering Zombies adapter records startup configuration, sampled normal path
-requests, throttled warnings for suspicious requests, and a five-second heartbeat.
-Warnings include unloaded target candidates, forced native pathfinding, long paths,
+The Wandering Zombies adapter records startup configuration, the active native or
+Java pathfinding backend, sampled normal path requests, throttled warnings for
+suspicious requests, and a five-second heartbeat.
+Warnings include unloaded target candidates, forced pathfinding, long paths,
 bursts, and paths near the physics-overflow coordinates seen in the affected save.
 
 Diagnostics are written to the normal Project Zomboid console log. The adapter does

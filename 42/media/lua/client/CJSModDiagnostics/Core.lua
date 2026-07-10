@@ -2,7 +2,7 @@ CJSModDiagnostics = CJSModDiagnostics or {}
 
 local Diagnostics = CJSModDiagnostics
 local MOD_ID = "cjsModDiagnostics"
-local VERSION = "0.1.1"
+local VERSION = "0.1.2"
 local HEARTBEAT_INTERVAL_MS = 5000
 local MAX_RING_EVENTS = 16
 
@@ -156,6 +156,19 @@ function Diagnostics.isModActive(modId)
     return safeCall(function() return mods:contains(modId) end, false) == true
 end
 
+function Diagnostics.pathfindingBackend()
+    if not getDebugOptions then return "unknown" end
+    local options = safeCall(function() return getDebugOptions() end, nil)
+    if not options then return "unknown" end
+
+    local useNative = safeCall(function()
+        return options:getBoolean("Pathfind.UseNativeCode")
+    end, nil)
+    if useNative == true then return "native" end
+    if useNative == false then return "java" end
+    return "unknown"
+end
+
 local function heartbeatFields(name, adapter)
     local fields = {adapter = name}
     for key, value in pairs(adapter.counts) do fields[key] = value end
@@ -203,6 +216,7 @@ function Diagnostics.start()
         version = VERSION,
         wandering_zombies_active = Diagnostics.isModActive("WanderingZombiesWIP"),
         tempo_perfkit_active = Diagnostics.isModActive("Tempo_PerfKit"),
+        pathfinding_backend = Diagnostics.pathfindingBackend(),
         heartbeat_ms = HEARTBEAT_INTERVAL_MS,
         ring_capacity = MAX_RING_EVENTS,
     })
