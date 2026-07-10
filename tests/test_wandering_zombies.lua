@@ -9,6 +9,7 @@ local callbacks = {gameStart = {}, tick = {}}
 
 _G.print = function(message) logs[#logs + 1] = tostring(message) end
 isServer = function() return false end
+xpcall = nil -- Project Zomboid's Kahlua base library does not expose xpcall.
 getTimeInMillis = function() return clock end
 getActivatedMods = function()
     return {

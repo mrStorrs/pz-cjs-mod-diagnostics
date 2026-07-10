@@ -31,11 +31,6 @@ local function safeCall(fn, fallback)
     return fallback
 end
 
-local function traceback(errorValue)
-    if debug and debug.traceback then return debug.traceback(tostring(errorValue), 2) end
-    return tostring(errorValue)
-end
-
 local function reportDiagnosticsError(stage, errorValue)
     pcall(function()
         Diagnostics.log("ERROR", "adapter_failure", {
@@ -275,7 +270,7 @@ function WanderingZombies.install()
     local function wrappedPathTo(self, pos, moveType, inHorde, noZScan, forceOOCP, forcePathfind, skipDestruction)
         -- high-freq: this observes each WIP path request and only emits sampled or throttled lines.
         local fields
-        local observed, observationError = xpcall(function()
+        local observed, observationError = pcall(function()
             Diagnostics.increment(ADAPTER, "requests")
             local suspicious
             fields, suspicious = analyze(
@@ -287,7 +282,7 @@ function WanderingZombies.install()
             else
                 Diagnostics.sample(ADAPTER, "path_sample", fields, 30000)
             end
-        end, traceback)
+        end)
         if not observed then
             reportDiagnosticsError("before_path", observationError)
         end
@@ -295,7 +290,7 @@ function WanderingZombies.install()
         local results = pack(original(
             self, pos, moveType, inHorde, noZScan, forceOOCP, forcePathfind, skipDestruction
         ))
-        local completed, completionError = xpcall(function()
+        local completed, completionError = pcall(function()
             Diagnostics.increment(ADAPTER, "completed")
             if results[1] == false then Diagnostics.increment(ADAPTER, "rejected") end
 
@@ -305,7 +300,7 @@ function WanderingZombies.install()
                 fields.result = results[1]
                 setLatest(fields)
             end
-        end, traceback)
+        end)
         if not completed then
             reportDiagnosticsError("after_path", completionError)
         end

@@ -3,5 +3,5 @@ id=cjsModDiagnostics
 description=Adds bounded diagnostics for supported mods without changing their behavior.
 poster=poster.png
 author=CJ Storrs
-modversion=0.1.0
+modversion=0.1.1
 versionMin=42.19.0

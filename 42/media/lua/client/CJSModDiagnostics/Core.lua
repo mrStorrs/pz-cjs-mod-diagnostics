@@ -2,7 +2,7 @@ CJSModDiagnostics = CJSModDiagnostics or {}
 
 local Diagnostics = CJSModDiagnostics
 local MOD_ID = "cjsModDiagnostics"
-local VERSION = "0.1.0"
+local VERSION = "0.1.1"
 local HEARTBEAT_INTERVAL_MS = 5000
 local MAX_RING_EVENTS = 16
 
